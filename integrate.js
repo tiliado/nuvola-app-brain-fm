@@ -25,14 +25,10 @@
 'use strict';
 
 (function (Nuvola) {
-  // Create media player component
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
-
-  // Handy aliases
   var PlaybackState = Nuvola.PlaybackState
   var PlayerAction = Nuvola.PlayerAction
 
-  // Create new WebApp prototype
+  var player = Nuvola.$object(Nuvola.MediaPlayer)
   var WebApp = Nuvola.$WebApp()
 
   // Initialization routines
@@ -49,15 +45,14 @@
 
   // Page is ready for magic
   WebApp._onPageReady = function () {
-    // Connect handler for signal ActionActivated
     Nuvola.actions.connect('ActionActivated', this)
-
-    // Start update routine
     this.update()
   }
 
   // Extract data from the web page
   WebApp.update = function () {
+    var state = PlaybackState.UNKNOWN
+    var elms = this.getElements()
     var track = {
       title: null,
       artist: null,
@@ -65,20 +60,62 @@
       artLocation: null,
       rating: null
     }
-
     player.setTrack(track)
-    player.setPlaybackState(PlaybackState.UNKNOWN)
+
+    if (elms.play) {
+      state = PlaybackState.PAUSED
+    } else if (elms.pause) {
+      state = PlaybackState.PLAYING
+    }
+
+    player.setPlaybackState(state)
+    player.setCanPlay(!!elms.play)
+    player.setCanPause(!!elms.pause)
+    player.setCanGoPrev(!!elms.prev)
+    player.setCanGoNext(!!elms.next)
+
+    var volume = elms.volumeMark ? elms.volumeMark.style.width.replace('%', '') / 100 : null
+    player.updateVolume(volume)
+    player.setCanChangeVolume(!!elms.volumeBar)
 
     // Schedule the next update
     setTimeout(this.update.bind(this), 500)
   }
 
-  // Handler of playback actions
   WebApp._onActionActivated = function (emitter, name, param) {
+    var elms = this.getElements()
     switch (name) {
-      case PlayerAction.Play:
+      case PlayerAction.TOGGLE_PLAY:
+        Nuvola.clickOnElement(elms.pause || elms.play)
+        break
+      case PlayerAction.PLAY:
+        Nuvola.clickOnElement(elms.play)
+        break
+      case PlayerAction.PAUSE:
+      case PlayerAction.STOP:
+        Nuvola.clickOnElement(elms.pause)
+        break
+      case PlayerAction.NEXT_SONG:
+        Nuvola.clickOnElement(elms.next)
+        break
+      case PlayerAction.CHANGE_VOLUME:
+        Nuvola.clickOnElement(elms.volumeBar, param, 0.5)
         break
     }
+  }
+
+  WebApp.getElements = function () {
+    var elms = {
+      volumeMark: document.querySelector('[class^="modules-music-player-css-Controls__volume___"] .rc-slider-track'),
+      volumeBar: document.querySelector('[class^="modules-music-player-css-Controls__volume___"] .rc-slider-rail')
+    }
+    var playPause = document.querySelector('button[class^="modules-music-player-css-PlayControl__wrapper"]')
+    elms.pause = playPause && playPause.querySelector('[class*="PlayControl__pause"]') ? playPause : null
+    elms.play = playPause && playPause.querySelector('[class*="PlayControl__play"]') ? playPause : null
+    if (elms.play || elms.pause) {
+      elms.next = document.querySelector('a[class*="modules-music-player-css-Skip__skip___"]')
+    }
+    return elms
   }
 
   WebApp.start()
