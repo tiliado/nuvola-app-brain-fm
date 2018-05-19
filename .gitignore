@@ -1,0 +1,13 @@
+Makefile
+metadata.json
+icons
+/screenshots/
+nuvola-app-brain-fm
+eu.tiliado.NuvolaAppBrainFm.desktop
+eu.tiliado.NuvolaAppBrainFm.service
+eu.tiliado.NuvolaAppBrainFm.appdata.xml
+nuvola-app-brain-fm.metainfo.xml
+eu.tiliado.WebRuntimeAppBrainFm.desktop
+eu.tiliado.WebRuntimeAppBrainFm.service
+eu.tiliado.WebRuntimeAppBrainFm.appdata.xml
+nuvola-app-brain-fm.metainfo.xml
