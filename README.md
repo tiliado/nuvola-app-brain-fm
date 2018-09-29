@@ -1,4 +1,4 @@
-Brain.fm • Nuvola Apps Runtime
+Brain.fm • Nuvola Apps Runtime [![CircleCI](https://circleci.com/gh/tiliado/nuvola-app-brain-fm/tree/master.svg?style=svg)](https://circleci.com/gh/tiliado/nuvola-app-brain-fm/tree/master)
 =================================
 
 Integration of Brain.fm into your linux desktop via
