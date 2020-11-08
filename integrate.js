@@ -25,17 +25,17 @@
 'use strict';
 
 (function (Nuvola) {
-  var PlaybackState = Nuvola.PlaybackState
-  var PlayerAction = Nuvola.PlayerAction
+  const PlaybackState = Nuvola.PlaybackState
+  const PlayerAction = Nuvola.PlayerAction
 
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
-  var WebApp = Nuvola.$WebApp()
+  const player = Nuvola.$object(Nuvola.MediaPlayer)
+  const WebApp = Nuvola.$WebApp()
 
   // Initialization routines
   WebApp._onInitWebWorker = function (emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter)
 
-    var state = document.readyState
+    const state = document.readyState
     if (state === 'interactive' || state === 'complete') {
       this._onPageReady()
     } else {
@@ -51,9 +51,9 @@
 
   // Extract data from the web page
   WebApp.update = function () {
-    var state = PlaybackState.UNKNOWN
-    var elms = this.getElements()
-    var track = {
+    let state = PlaybackState.UNKNOWN
+    const elms = this.getElements()
+    const track = {
       title: null,
       artist: null,
       album: null,
@@ -74,7 +74,7 @@
     player.setCanGoPrev(!!elms.prev)
     player.setCanGoNext(!!elms.next)
 
-    var volume = elms.volumeMark ? elms.volumeMark.style.width.replace('%', '') / 100 : null
+    const volume = elms.volumeMark ? elms.volumeMark.style.width.replace('%', '') / 100 : null
     player.updateVolume(volume)
     player.setCanChangeVolume(!!elms.volumeBar)
 
@@ -83,7 +83,7 @@
   }
 
   WebApp._onActionActivated = function (emitter, name, param) {
-    var elms = this.getElements()
+    const elms = this.getElements()
     switch (name) {
       case PlayerAction.TOGGLE_PLAY:
         Nuvola.clickOnElement(elms.pause || elms.play)
@@ -105,11 +105,11 @@
   }
 
   WebApp.getElements = function () {
-    var elms = {
+    const elms = {
       volumeMark: document.querySelector('[class^="modules-music-player-css-Controls__volume___"] .rc-slider-track'),
       volumeBar: document.querySelector('[class^="modules-music-player-css-Controls__volume___"] .rc-slider-rail')
     }
-    var playPause = document.querySelector('button[class^="modules-music-player-css-PlayControl__wrapper"]')
+    const playPause = document.querySelector('button[class^="modules-music-player-css-PlayControl__wrapper"]')
     elms.pause = playPause && playPause.querySelector('[class*="PlayControl__pause"]') ? playPause : null
     elms.play = playPause && playPause.querySelector('[class*="PlayControl__play"]') ? playPause : null
     if (elms.play || elms.pause) {
@@ -119,4 +119,4 @@
   }
 
   WebApp.start()
-})(this)  // function(Nuvola)
+})(this) // function(Nuvola)
